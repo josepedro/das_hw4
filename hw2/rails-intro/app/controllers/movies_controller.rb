@@ -7,7 +7,30 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @movies = Movie.all
+    redirect = false
+
+    @sort = params[:sort] ? params[:sort] : session[:sort]
+    @ratings = params[:ratings] ? params[:ratings] : session[:ratings]
+
+    if (params[:sort] != @sort) || (params[:ratings] != @ratings)
+      redirect = true
+    end
+
+    @all_ratings = Movie.pluck(:rating).uniq
+
+    if @ratings.nil?
+      @ratings = {}
+      @all_ratings.each{ |i| @ratings[i] = "on" }
+    end
+
+    if redirect
+      redirect_to movies_path(:sort => @sort, :ratings => @ratings)
+    end
+
+    @movies = Movie.find(:all, conditions: { rating: @ratings.keys }, order: @sort ? @sort : :id)
+
+    session[:sort] = @sort
+    session[:ratings] = @ratings 
   end
 
   def new
