@@ -31,6 +31,16 @@ module WithinHelpers
 end
 World(WithinHelpers)
 
+When /^(?:|I) go to the edit page for "(.*)"$/ do |movie_title|
+  movie = Movie.find_by_title(movie_title)
+  visit edit_movie_path(id: movie.id)
+end
+
+Given /^(?:|I )am on the details page for "(.+)"$/ do |movie_title|
+  movie = Movie.find_by_title(movie_title)
+  visit movie_path(id: movie.id)
+end
+
 # Single-line step scoper
 When /^(.*) within (.*[^:])$/ do |step, parent|
   with_scope(parent) { When step }
@@ -41,13 +51,13 @@ When /^(.*) within (.*[^:]):$/ do |step, parent, table_or_string|
   with_scope(parent) { When "#{step}:", table_or_string }
 end
 
-Given /^(?:|I )am on (.+)$/ do |page_name|
-  visit path_to(page_name)
-end
+# Given /^(?:|I )am on (.+)$/ do |page_name|
+#   visit path_to(page_name)
+# end
 
-When /^(?:|I )go to (.+)$/ do |page_name|
-  visit path_to(page_name)
-end
+# When /^(?:|I )go to (.+)$/ do |page_name|
+#   visit path_to(page_name)
+# end
 
 When /^(?:|I )press "([^"]*)"$/ do |button|
   click_button(button)
