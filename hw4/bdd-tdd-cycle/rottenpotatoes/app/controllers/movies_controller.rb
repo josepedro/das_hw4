@@ -6,7 +6,15 @@ class MoviesController < ApplicationController
     # will render app/views/movies/show.<extension> by default
   end
 
+  def show_director
+    id = params[:id]
+    @movie = Movie.find(id)
+    @movies_list = @movie.find_all_by_director
+  end
+
+
   def index
+
     sort = params[:sort] || session[:sort]
     case sort
     when 'title'
@@ -16,23 +24,17 @@ class MoviesController < ApplicationController
     end
     @all_ratings = Movie.all_ratings
     @selected_ratings = params[:ratings] || session[:ratings] || {}
-    
+
     if @selected_ratings == {}
       @selected_ratings = Hash[@all_ratings.map {|rating| [rating, rating]}]
     end
-    
-    if params[:sort] != session[:sort]
-      session[:sort] = sort
-      flash.keep
-      redirect_to :sort => sort, :ratings => @selected_ratings and return
-    end
 
-    if params[:ratings] != session[:ratings] and @selected_ratings != {}
+    if params[:sort] != session[:sort] or params[:ratings] != session[:ratings]
       session[:sort] = sort
       session[:ratings] = @selected_ratings
-      flash.keep
       redirect_to :sort => sort, :ratings => @selected_ratings and return
     end
+    @msg = params[:msg] if params[:msg]
     @movies = Movie.find_all_by_rating(@selected_ratings.keys, ordering)
   end
 
@@ -64,12 +66,4 @@ class MoviesController < ApplicationController
     redirect_to movies_path
   end
 
-  def with_the_same_director
-    movie = Movie.find_by_id(params[:id])
-    if movie.director.nil? || movie.director.empty?
-      redirect_to movies_path 
-      flash[:notice] = "'#{movie.title}' has no director info"
-    end
-    @movies_with_the_same_director = movie.find_all_by_director
-  end
 end

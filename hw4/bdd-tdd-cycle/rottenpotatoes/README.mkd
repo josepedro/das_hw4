@@ -1,0 +1,6 @@
+4th assignment for SaaS Berkeley
+===============================
+
+* assignment 4 SaaS Berkeley. _Done._
+* Added search by director route, model & controller method.
+* Full unit test and cucumber scenarios(integration tests)(integration tests

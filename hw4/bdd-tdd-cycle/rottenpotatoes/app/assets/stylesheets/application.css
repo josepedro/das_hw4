@@ -51,7 +51,7 @@ table#movies th, table#movies td {
 table#movies th.hilite {
   background-color: yellow;
 }
-#notice, #warning {
+#notice #warning {
   background: rosybrown;
   margin: 1em 0;
   padding: 4px;
@@ -61,4 +61,8 @@ form label {
   line-height: 25px;
   font-weight: bold;
   color: maroon;
+}
+div.highlight {
+    background-color: yellow;
+    width: -moz-fit-content;
 }
